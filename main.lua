@@ -20,7 +20,13 @@ function love.load()
     smallGameFont = love.graphics.newFont('Early_GameBoy.ttf', 8)
     largeGameFont = love.graphics.newFont('Early_GameBoy.ttf', 12)
     scoreFont = love.graphics.newFont('Early_GameBoy.ttf', 10)
-
+    
+    --sounds table
+    sounds = {
+         ['paddle_hit'] = love.audio.newSource('paddle.wav', 'static'),
+         ['miss'] = love.audio.newSource('miss.wav', 'static'),
+         ['wall'] = love.audio.newSource('wall.wav', 'static')
+    }
 
     player1Score = 0
     player2Score = 0
@@ -52,11 +58,11 @@ end
 
 
 function love.update(dt)
-
         --ball misses paddle1
         if ball.x < 0 then
             player2Score = player2Score + 1
             servingPlayer = 1
+            sounds['miss']:play()
             ball:restart()
             if player2Score >=3 then
                 gameState = 'victory'
@@ -71,6 +77,7 @@ function love.update(dt)
         if ball.x > VIRTUAL_WIDTH-6 then
             player1Score = player1Score + 1
             servingPlayer =2 
+            sounds['miss']:play()
             ball:restart()
             if player1Score >=3 then
                 gameState = 'victory'
@@ -83,24 +90,30 @@ function love.update(dt)
 
         --ball hits paddle1
         if ball:collide(paddle1) then
-            ball.dx = - ball.dx
+            ball.dx = - ball.dx *1.03
+            ball.x = paddle1.x+5
+            sounds['paddle_hit']:play()
         end
 
         --ball hits paddle2
         if ball:collide(paddle2) then
-            ball.dx = - ball.dx
+            ball.dx = - ball.dx*1.03
+            ball.x = paddle2.x-4
+            sounds['paddle_hit']:play()
         end
 
         --ball bounces off top
         if ball.y <= 0 then
             ball.dy = - ball.dy
             ball.y = 0
+            sounds['wall']:play()
         end
 
         --ball bounce off bottom
         if ball.y >= VIRTUAL_HEIGHT -6 then
             ball.y = - ball.y
             ball.y = VIRTUAL_HEIGHT -6
+            sounds['wall']:play()
         end
 
 
@@ -109,7 +122,6 @@ function love.update(dt)
 
         if love.keyboard.isDown('w') then
             paddle1.dy = -PADDLE_SPEED
-
         elseif love.keyboard.isDown('s') then
             paddle1.dy = PADDLE_SPEED
         else
@@ -128,8 +140,6 @@ function love.update(dt)
         ball:update(dt)
         end
     end
-
-
 
 
 function love.keypressed(key)

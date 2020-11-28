@@ -12,7 +12,7 @@ require 'Ball'
 require 'Paddle'
 
 function love.load()
-    
+    love.window.setTitle('Pong Game')
     --remove fade filter 
     love.graphics.setDefaultFilter('nearest', 'nearest')
 
@@ -38,28 +38,62 @@ end
 
 
 function love.update(dt)
-    paddle1:update(dt)
-    paddle2:update(dt)
-
-    if love.keyboard.isDown('w') then
-        paddle1.dy = -PADDLE_SPEED
-
-    elseif love.keyboard.isDown('s') then
-        paddle1.dy = PADDLE_SPEED
-    else
-        paddle1.dy = 0
-    end
-
-    if love.keyboard.isDown('up') then
-        paddle2.dy = - PADDLE_SPEED
-    elseif love.keyboard.isDown('down') then
-        paddle2.dy = PADDLE_SPEED
-    else
-        paddle2.dy = 0
-    end
-
     if gameState == 'play' then
-       ball:update(dt)
+        --ball misses paddle1
+        if ball.x <= 0 then
+            player2Score = player2Score + 1
+            ball:restart()
+            gameState = 'start'
+        end
+        --ball missespaddle2
+        if ball.x >= VIRTUAL_WIDTH-6 then
+            player1Score = player1Score + 1
+            ball:restart()
+            gameState = 'start'
+        end
+        --ball hits paddle1
+        if ball:collide(paddle1) then
+            ball.dx = - ball.dx
+        end
+        --ball hits paddle2
+        if ball:collide(paddle2) then
+            ball.dx = - ball.dx
+        end
+        --ball bounces off top
+        if ball.y <= 0 then
+            ball.dy = - ball.dy
+            ball.y = 0
+        end
+        --ball bounce off bottom
+        if ball.y >= VIRTUAL_HEIGHT -6 then
+            ball.y = - ball.y
+            ball.y = VIRTUAL_HEIGHT -4
+        end
+
+
+        paddle1:update(dt)
+        paddle2:update(dt)
+
+        if love.keyboard.isDown('w') then
+            paddle1.dy = -PADDLE_SPEED
+
+        elseif love.keyboard.isDown('s') then
+            paddle1.dy = PADDLE_SPEED
+        else
+            paddle1.dy = 0
+        end
+
+        if love.keyboard.isDown('up') then
+            paddle2.dy = - PADDLE_SPEED
+        elseif love.keyboard.isDown('down') then
+            paddle2.dy = PADDLE_SPEED
+        else
+            paddle2.dy = 0
+        end
+
+        if gameState == 'play' then
+        ball:update(dt)
+        end
     end
 end
 
@@ -70,9 +104,6 @@ function love.keypressed(key)
     elseif key == 'enter' or key == 'return' then
        if gameState == 'start' then
             gameState = 'play'
-        elseif gameState == 'play' then
-            gameState = 'start'
-            ball:restart()
         end
     end
 end
@@ -82,11 +113,7 @@ function love.draw()
     love.graphics.clear(30/255, 45/255, 60/255, 255/255)
 
     love.graphics.setFont(smallGameFont)
-    if gameState == 'start' then
-        love.graphics.printf("Hello Start!", 0, 20, VIRTUAL_WIDTH, 'center')
-    elseif gameState == 'play' then
-        love.graphics.printf("Hello Play!", 0, 20, VIRTUAL_WIDTH, 'center')
-    end
+   
 
     love.graphics.setFont(largeGameFont)
     love.graphics.print(player1Score, VIRTUAL_WIDTH/2-50, VIRTUAL_HEIGHT/3)

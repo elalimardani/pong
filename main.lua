@@ -27,7 +27,7 @@ function love.load()
     ballX = VIRTUAL_WIDTH/2-3
     ballY = VIRTUAL_HEIGHT/2-3
 
-    gameState = 'play'
+    gameState = 'start'
 
     ballDx = math.random(2) == 1 and -100 or 100
     ballDy = math.random(-50, 50)
@@ -63,6 +63,12 @@ end
 function love.keypressed(key)
     if key == 'escape' then 
         love.event.quit()
+    elseif key == 'enter' or key == 'return' then
+       if gameState == 'start' then
+            gameState = 'play'
+        elseif gameState == 'play' then
+            gameState = 'start'
+        end
     end
 end
 

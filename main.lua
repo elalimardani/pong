@@ -9,7 +9,10 @@ PADDLE_SPEED = 200
 push = require 'push'
 
 function love.load()
+    --ball movement
+    math.randomseed(os.time())
 
+    --remove fade filter 
     love.graphics.setDefaultFilter('nearest', 'nearest')
 
     smallGameFont = love.graphics.newFont('Early_GameBoy.ttf', 8)
@@ -21,12 +24,21 @@ function love.load()
     player1Y = 30
     player2Y = VIRTUAL_HEIGHT-40
 
+    ballX = VIRTUAL_WIDTH/2-3
+    ballY = VIRTUAL_HEIGHT/2-3
+
+    gameState = 'play'
+
+    ballDx = math.random(2) == 1 and -100 or 100
+    ballDy = math.random(-50, 50)
+
     push: setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
         fullscreen = false,
         vsync = true,
         resizable = false
     })
 end
+
 
 function love.update(dt)
     if love.keyboard.isDown('w') then
@@ -39,6 +51,11 @@ function love.update(dt)
         player2Y = math.max(0, player2Y - PADDLE_SPEED * dt)
     elseif love.keyboard.isDown('down') then
         player2Y = math.min(VIRTUAL_HEIGHT-20, player2Y + PADDLE_SPEED * dt)
+    end
+
+    if gameState == 'play' then
+        ballX = ballX + ballDx * dt
+        ballY = ballY + ballDy * dt
     end
 end
 
@@ -61,7 +78,7 @@ function love.draw()
     love.graphics.print(player2Score, VIRTUAL_WIDTH /2+30, VIRTUAL_HEIGHT/3)
 
     -- the ball
-    love.graphics.rectangle('fill', VIRTUAL_WIDTH/2-3, VIRTUAL_HEIGHT/2-3, 6, 6)
+    love.graphics.rectangle('fill', ballX, ballY, 6, 6)
     --left paddle
     love.graphics.rectangle('fill', 10, player1Y, 6, 20)
     -- right paddle

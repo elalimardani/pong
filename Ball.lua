@@ -5,7 +5,7 @@ function Ball:init(x, y, width, height)
     self.y = y
     self.width = width
     self.height = height
-
+    math.randomseed(os.time())
     self.dx = math.random(2) == 1 and 100 or -100
     self.dy = math.random(-50, 50)
 end
@@ -14,7 +14,7 @@ function Ball:restart()
     self.x = VIRTUAL_WIDTH/2-3
     self.y = VIRTUAL_HEIGHT/2-3
     self.dx = math.random(2) == 1 and -100 or 100
-    seld.dy = math.random(-50, 50)
+    self.dy = math.random(-50, 50)
 end
 
 function Ball:update(dt)

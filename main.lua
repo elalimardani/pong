@@ -12,9 +12,7 @@ require 'Ball'
 require 'Paddle'
 
 function love.load()
-    --ball movement
-    math.randomseed(os.time())
-
+    
     --remove fade filter 
     love.graphics.setDefaultFilter('nearest', 'nearest')
 
@@ -93,9 +91,18 @@ function love.draw()
     love.graphics.setFont(largeGameFont)
     love.graphics.print(player1Score, VIRTUAL_WIDTH/2-50, VIRTUAL_HEIGHT/3)
     love.graphics.print(player2Score, VIRTUAL_WIDTH /2+30, VIRTUAL_HEIGHT/3)
-    ball:render()
     paddle1:render()
     paddle2:render()
-    
+    ball:render()
+    displayFPS()
     push:apply('end')
 end
+
+
+function displayFPS()
+    love.graphics.setColor(0, 1, 0, 1)
+    love.graphics.setFont(smallGameFont)
+    love.graphics.print('FPS: ' .. tostring(love.timer.getFPS()), 40, 20)
+    love.graphics.setColor(1, 1, 1, 1)
+end
+

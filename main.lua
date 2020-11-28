@@ -7,7 +7,13 @@ VIRTUAL_HEIGHT = 243
 push = require 'push'
 
 function love.load()
+
     love.graphics.setDefaultFilter('nearest', 'nearest')
+
+    smallGameFont = love.graphics.newFont('Early_GameBoy.ttf', 8)
+
+    love.graphics.setFont(smallGameFont)
+
     push: setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
         fullscreen = false,
         vsync = true,
@@ -19,17 +25,21 @@ function love.keypressed(key)
     if key == 'escape' then 
         love.event.quit()
     end
-
 end
 
 
 function love.draw()
     push:apply('start')
+    love.graphics.clear(30/255, 45/255, 60/255, 255/255)
+
+    love.graphics.rectangle('fill', VIRTUAL_WIDTH/2-3, VIRTUAL_HEIGHT/2-3, 6, 6)
+    love.graphics.rectangle('fill', 5, 20, 6, 20)
+    love.graphics.rectangle('fill', VIRTUAL_WIDTH-10, VIRTUAL_HEIGHT-40, 6, 20)
 
     love.graphics.printf(
         "Hello Pong!", 
         0, 
-        VIRTUAL_HEIGHT/2-6, 
+        20, 
         VIRTUAL_WIDTH, 
         'center')
 

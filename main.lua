@@ -12,7 +12,7 @@ require 'Ball'
 require 'Paddle'
 
 function love.load()
-    love.window.setTitle('Pong Game')
+    love.window.setTitle('Pong Game - by El')
 
     --remove fade filter 
     love.graphics.setDefaultFilter('nearest', 'nearest')
@@ -20,7 +20,7 @@ function love.load()
     smallGameFont = love.graphics.newFont('Early_GameBoy.ttf', 8)
     largeGameFont = love.graphics.newFont('Early_GameBoy.ttf', 12)
     scoreFont = love.graphics.newFont('Early_GameBoy.ttf', 10)
-    
+    creditFont = love.graphics.newFont('WONDER.TTF',7)
     --sounds table
     sounds = {
          ['paddle_hit'] = love.audio.newSource('paddle.wav', 'static'),
@@ -111,7 +111,7 @@ function love.update(dt)
 
         --ball bounce off bottom
         if ball.y >= VIRTUAL_HEIGHT -6 then
-            ball.y = - ball.y
+            ball.dy = - ball.dy
             ball.y = VIRTUAL_HEIGHT -6
             sounds['wall']:play()
         end
@@ -189,6 +189,7 @@ function love.draw()
     paddle2:render()
     ball:render()
     displayFPS()
+    displayCredits()
     push:apply('end')
 end
 
@@ -204,5 +205,12 @@ function displayScore()
     love.graphics.setFont(scoreFont)
     love.graphics.print(tostring(player1Score), VIRTUAL_WIDTH /2-50, VIRTUAL_HEIGHT/3)
     love.graphics.print(tostring(player2Score), VIRTUAL_WIDTH/2+30, VIRTUAL_HEIGHT/3)
+end
+
+function displayCredits()
+    love.graphics.setFont(creditFont)
+    love.graphics.setColor(1, 122/255, 0,0.6)
+    love.graphics.print('El - elCodeLab 2020 ', VIRTUAL_WIDTH /2+70, VIRTUAL_HEIGHT/3+150)
+    love.graphics.setColor(1,1,1,1)
 end
 

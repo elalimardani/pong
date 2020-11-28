@@ -6,7 +6,6 @@ VIRTUAL_HEIGHT = 243
 
 PADDLE_SPEED = 200
 
-
 push = require 'push'
 
 function love.load()
@@ -31,15 +30,15 @@ end
 
 function love.update(dt)
     if love.keyboard.isDown('w') then
-        player1Y = player1Y - PADDLE_SPEED * dt
+        player1Y = math.max(0, player1Y - PADDLE_SPEED * dt)
     elseif love.keyboard.isDown('s') then
-        player1Y = player1Y + PADDLE_SPEED * dt
+        player1Y = math.min(VIRTUAL_HEIGHT-20, player1Y + PADDLE_SPEED * dt)
     end
 
     if love.keyboard.isDown('up') then
-        player2Y = player2Y - PADDLE_SPEED * dt
+        player2Y = math.max(0, player2Y - PADDLE_SPEED * dt)
     elseif love.keyboard.isDown('down') then
-        player2Y = player2Y + PADDLE_SPEED * dt
+        player2Y = math.min(VIRTUAL_HEIGHT-20, player2Y + PADDLE_SPEED * dt)
     end
 end
 
@@ -49,7 +48,6 @@ function love.keypressed(key)
         love.event.quit()
     end
 end
-
 
 function love.draw()
     push:apply('start')
@@ -68,8 +66,5 @@ function love.draw()
     love.graphics.rectangle('fill', 10, player1Y, 6, 20)
     -- right paddle
     love.graphics.rectangle('fill', VIRTUAL_WIDTH-10, player2Y, 6, 20)
-
- 
-
     push:apply('end')
 end
